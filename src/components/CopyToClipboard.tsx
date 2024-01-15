@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import copy from 'copy-to-clipboard';
 
 interface Props {
   value: string;
@@ -9,12 +10,11 @@ interface Props {
 export const CopyToClipboard: FC<Props> = ({ value, displayValue }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 1500); // Закрыть модальное окно через 2 секунды
-    });
-  };
+  const copyToClipboard = useCallback((text: string) => {
+    copy(text);
+    setIsModalOpen(true);
+    setTimeout(() => setIsModalOpen(false), 1500);
+  }, []);
 
   return (
     <div>
