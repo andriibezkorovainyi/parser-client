@@ -9,12 +9,12 @@ interface Props {
 export const CopyToClipboard: FC<Props> = ({ value, displayValue }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const copyToClipboard = useCallback((text: string) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setIsModalOpen(true);
       setTimeout(() => setIsModalOpen(false), 1500); // Закрыть модальное окно через 2 секунды
     });
-  }, []);
+  };
 
   return (
     <div>
