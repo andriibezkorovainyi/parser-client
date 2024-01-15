@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import type { AccessContextValue, IUser } from '../types/interfaces';
+import type { AccessContextValue, IUser } from '../utils/interfaces';
 import AuthService from '../services/AuthService';
 
 export const AuthContext = createContext<AccessContextValue | undefined>(undefined);

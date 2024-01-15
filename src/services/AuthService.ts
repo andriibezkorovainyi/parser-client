@@ -1,13 +1,14 @@
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import type { IUser } from '../types/interfaces.ts';
+import type { IUser } from '../utils/interfaces';
+import { HOST, PORT } from '../utils/constants';
 
 class AuthService {
   private readonly httpClient: AxiosInstance;
 
   constructor() {
     this.httpClient = axios.create({
-      baseURL: 'http://localhost:3000/api',
+      baseURL: `${HOST}:${PORT}/api`,
     });
   }
 

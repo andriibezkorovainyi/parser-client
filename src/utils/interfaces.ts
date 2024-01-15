@@ -1,4 +1,4 @@
-import type { NetworkType, OperandType } from './enums.ts';
+import type { NetworkType, OperandType, OrderByType } from './enums.ts';
 
 export interface AccessContextValue {
   accessToken?: string | null;
@@ -19,18 +19,6 @@ export interface IUser {
   username: string;
 }
 
-export interface IContract {
-  id: number;
-  address: string;
-  network: INetwork;
-  name: string;
-  balance: number;
-  tokenBalanceUSD: number;
-  tokens: IToken[];
-  notes: INote[];
-  isVerified: boolean;
-}
-
 export interface INetwork {
   id: number;
   name: string;
@@ -40,8 +28,8 @@ export interface IToken {
   id: number;
   name: string;
   address: string;
-  balance: number;
-  balanceUSD: number;
+  balance: string;
+  balanceUSD: string;
 }
 
 export interface INote {
@@ -49,15 +37,26 @@ export interface INote {
   title: string;
   content: string;
   user: IUser;
+  updatedAt: string;
 }
 
 export interface IGetContractsQuery {
-  page?: number;
-  verifiedOnly?: boolean;
-  orderByBalance?: boolean;
+  page: number;
+  verifiedOnly: boolean;
   network: NetworkType;
-  balance?: number;
-  balanceOperand?: OperandType;
-  tokenBalanceUSD?: number;
-  tokenBalanceUSDOperand?: OperandType;
+  balance: number;
+  balanceOperand: OperandType;
+  tokenBalanceUSD: number;
+  tokenBalanceUSDOperand: OperandType;
+  tokenAddress: string;
+  tokenUSDAmount: number;
+  tokenUSDAmountOperand: OperandType;
+  orderBy: OrderByType;
+}
+
+export interface IAddNoteBody {
+  title: string;
+  content: string;
+  contractId: number;
+  userId: number;
 }

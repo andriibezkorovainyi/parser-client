@@ -10,7 +10,7 @@ export default function () {
 
   return (
     <div>
-      <h2>Sign in</h2>
+      <h2>Authorization</h2>
 
       <form
         onSubmit={

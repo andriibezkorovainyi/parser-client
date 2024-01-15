@@ -1,12 +1,12 @@
 import './App.scss';
-import MainLayout from './layouts/MainLayout';
-import AuthorizationLayout from './layouts/AuthorizationLayout';
+import HomePage from './pages/HomePage';
+import AuthorizationPage from './pages/AuthorizationPage';
 import useAccessContext from './hooks/useAccessContext';
 
 function App() {
   const { isAuthenticated } = useAccessContext();
 
-  return <div>{isAuthenticated ? <MainLayout /> : <AuthorizationLayout />}</div>;
+  return <div>{isAuthenticated ? <HomePage /> : <AuthorizationPage />}</div>;
 }
 
 export default App;
