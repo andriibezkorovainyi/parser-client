@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ContractTable } from '@components/ContractsTable.tsx';
 import { Pagination } from '@components/Pagination.tsx';
 import { DownloadArchive } from '@components/DownloadArchive.tsx';

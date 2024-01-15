@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { useCallback, useState } from 'react';
 import { Notes } from '@components/Notes.tsx';
 import { Tokens } from '@components/Tokens.tsx';
 import { CopyToClipboard } from '@components/CopyToClipboard.tsx';
