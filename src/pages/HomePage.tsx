@@ -157,7 +157,7 @@ export default function () {
         </div>
 
         <div>
-          <span>Order by</span>
+          <span>Order By</span>
           <select value={orderBy} onChange={(e) => setOrderBy(e.target.value as OrderByType)}>
             <option value={OrderByType.NONE}>None</option>
             <option value={OrderByType.BALANCE}>Balance</option>
@@ -166,7 +166,14 @@ export default function () {
         </div>
 
         <div className="mt-3">
-          <input type="checkbox" checked={verifiedOnly} onChange={(e) => setVerifiedOnly(e.target.checked)} />
+          <input
+            style={{
+              marginRight: 3,
+            }}
+            type="checkbox"
+            checked={verifiedOnly}
+            onChange={(e) => setVerifiedOnly(e.target.checked)}
+          />
           <label>Verified Only</label>
         </div>
       </div>
