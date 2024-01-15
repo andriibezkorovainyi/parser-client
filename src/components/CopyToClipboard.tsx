@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 interface Props {
   value: string;
