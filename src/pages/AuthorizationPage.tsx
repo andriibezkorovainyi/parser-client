@@ -9,10 +9,21 @@ export default function () {
   const [password, setPassword] = useState('');
 
   return (
-    <div>
-      <h2>Authorization</h2>
+    <div className="auth-container">
+      <h2 className="title is-2">Authorization</h2>
 
       <form
+        style={{
+          alignItems: 'start',
+          alignSelf: 'end',
+          borderRadius: '10px',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          margin: 'auto',
+          padding: '20px',
+        }}
         onSubmit={
           (async (event) => {
             event.preventDefault();
@@ -33,7 +44,14 @@ export default function () {
       >
         <div>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label id="password" htmlFor="username">
+          <label
+            id="username"
+            htmlFor="username"
+            className="title is-5"
+            style={{
+              marginRight: 5,
+            }}
+          >
             Username
           </label>
           <input type="text" id="username" value={username} onChange={(event) => setUsername(event.target.value)} />
@@ -41,13 +59,22 @@ export default function () {
 
         <div>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label id="password" htmlFor="password">
+          <label
+            id="password"
+            htmlFor="password"
+            className="title is-5"
+            style={{
+              marginRight: 10,
+            }}
+          >
             Password
           </label>
           <input type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </div>
 
-        <button type="submit">Sign in</button>
+        <button style={{ alignSelf: 'center' }} type="submit">
+          Sign in
+        </button>
       </form>
     </div>
   );
