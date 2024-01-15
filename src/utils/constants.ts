@@ -1,5 +1,3 @@
-import { env } from 'process';
-
 export const ENVIRONMENT = import.meta.env.VITE_ENV || 'dev';
 
 // @ts-ignore
