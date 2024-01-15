@@ -1,8 +1,10 @@
-export const ENVIRONMENT: 'dev' | 'prod' = 'prod';
+import { env } from 'process';
+
+export const ENVIRONMENT = import.meta.env.VITE_ENV || 'dev';
 
 // @ts-ignore
-export const HOST = ENVIRONMENT === 'dev' ? 'http://localhost' : 'http://91.186.197.108';
-export const PORT = 3000;
+export const HOST = ENVIRONMENT === 'dev' ? 'http://localhost' : import.meta.env.VITE_API_HOST;
+export const PORT = import.meta.env.VITE_API_PORT;
 
 export const ModalStyle = {
   backgroundColor: '#242424',
