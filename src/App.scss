@@ -110,3 +110,24 @@
   flex-direction: column;
   align-items: center;
 }
+
+.contract-table {
+  display: flex;
+  //justify-items: start;
+    align-items: start;
+  width: 100%;
+  min-height: 50vh;
+}
+
+.search-bar {
+  display: block;
+  marginBottom: 20px;
+  border: 1px solid #ccc;
+}
+
+.pointer-heights {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

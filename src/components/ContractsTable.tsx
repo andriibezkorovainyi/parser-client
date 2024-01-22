@@ -1,31 +1,47 @@
 import type { FC } from 'react';
 import { ContractInfo } from '@components/ContractInfo.tsx';
+import { Loader } from '@components/Loader';
 import { Contract } from '../utils/classes';
 
 const columns = new Contract().getColumns();
 
 interface Props {
-  contracts: Contract[];
+  contracts: Contract[] | null;
 }
 
 export const ContractTable: FC<Props> = ({ contracts }) => {
   return (
-    <table className="table is-striped is-hoverable is-narrow is-fullwidth">
-      <thead>
-        <tr>
-          {columns.map((col) => (
-            <th key={col}>
-              <span className="is-flex is-flex-wrap-nowrap">{col}</span>
-            </th>
-          ))}
-        </tr>
-      </thead>
+    <div className="contract-table">
+      {contracts === null ? (
+        <Loader />
+      ) : (
+        <table className="table is-striped is-hoverable is-narrow is-fullwidth">
+          <thead>
+            <tr>
+              {columns.map((col) => (
+                <th key={col}>
+                  <span className="is-flex is-flex-wrap-nowrap">{col}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-      <tbody>
-        {contracts?.map((contract) => {
-          return <ContractInfo contract={contract} key={contract.id} />;
-        })}
-      </tbody>
-    </table>
+          <tbody>
+            {contracts.map((contract) => {
+              return <ContractInfo contract={contract} key={contract.id} />;
+            })}
+          </tbody>
+          {/* <tbody> */}
+          {/*  {contracts === null ? ( */}
+          {/*    <Loader /> */}
+          {/*  ) : ( */}
+          {/*    contracts.map((contract) => { */}
+          {/*      return <ContractInfo contract={contract} key={contract.id} />; */}
+          {/*    }) */}
+          {/*  )} */}
+          {/* </tbody> */}
+        </table>
+      )}
+    </div>
   );
 };

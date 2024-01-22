@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ContractTable } from '@components/ContractsTable.tsx';
 import { Pagination } from '@components/Pagination.tsx';
 import { DownloadArchive } from '@components/DownloadArchive.tsx';
 import User from '@components/User.tsx';
-import type { IGetContractsQuery } from '../utils/interfaces';
+import SearchBar from '@components/SearchBar.tsx';
+import PointerHeight from '@components/PointerHeight.tsx';
+import type { IGetContractsQuery, ISearchContractsQuery } from '../utils/interfaces';
 import { NetworkType, OperandType, OrderByType } from '../utils/enums';
 import GatewayService from '../services/ContractService.ts';
 import type { Contract } from '../utils/classes.ts';
+import ContractService from '../services/ContractService.ts';
 
 function checkNumberFromInput(value: string) {
   const parsed = parseFloat(value);
@@ -28,6 +31,28 @@ export default function () {
   const [tokenUSDAmount, setTokenUSDAmount] = useState<number | ''>('');
   const [tokenUSDAmountOperand, setTokenUSDAmountOperand] = useState<OperandType>(OperandType.MORE);
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [searchedContracts, setSearchedContracts] = useState<Contract[]>([]);
+  // const [search, setSearch] = useState<string>('');
+
+  const contractsToShow = searchedContracts.length > 0 ? searchedContracts : contracts;
+
+  const onSearch = useCallback(
+    (query: ISearchContractsQuery) => {
+      setIsLoading(true);
+
+      ContractService.searchContracts({ ...query, network })
+        .then((c) => {
+          setSearchedContracts(c);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => setIsLoading(false));
+    },
+    [searchedContracts, network]
+  );
 
   function parseQuery(): IGetContractsQuery {
     return {
@@ -66,14 +91,17 @@ export default function () {
   function getContractsByFilters() {
     const query = parseQuery();
 
+    setIsLoading(true);
+
     GatewayService.getContracts(query)
-      .then(({ contracts, totalPages }) => {
-        setContracts(contracts);
-        setTotalPages(totalPages);
+      .then(({ contracts: _c, totalPages: _tP }) => {
+        setContracts(_c);
+        setTotalPages(_tP);
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }
 
   function changePage(_page: number) {
@@ -197,8 +225,10 @@ export default function () {
         </button>
       </div>
 
+      <SearchBar onSearch={onSearch} />
+
       <div>
-        <ContractTable contracts={contracts} />
+        <ContractTable contracts={isLoading ? null : contractsToShow} />
       </div>
 
       <div>
@@ -208,6 +238,8 @@ export default function () {
       <div>
         <DownloadArchive query={parseQuery()} />
       </div>
+
+      <PointerHeight />
     </div>
   );
 }

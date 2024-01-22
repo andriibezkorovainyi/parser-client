@@ -19,4 +19,5 @@ export const ModalStyle = {
   top: '50%',
   transform: 'translate(-50%, -50%)',
   width: '60%',
+  zIndex: 1000,
 };

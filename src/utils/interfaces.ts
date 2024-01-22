@@ -54,9 +54,19 @@ export interface IGetContractsQuery {
   orderBy: OrderByType;
 }
 
+export interface ISearchContractsQuery {
+  network?: NetworkType;
+  address: string;
+}
+
 export interface IAddNoteBody {
   title: string;
   content: string;
   contractId: number;
   userId: number;
+}
+
+export interface IPointerHeight {
+  network: NetworkType;
+  height: number;
 }

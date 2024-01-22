@@ -1,8 +1,9 @@
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import type { IAddNoteBody, IGetContractsQuery } from '../utils/interfaces';
+import type { IAddNoteBody, IGetContractsQuery, ISearchContractsQuery } from '../utils/interfaces';
 import { OperandType, OrderByType } from '../utils/enums';
 import { HOST, PORT } from '../utils/constants';
+import type { Contract } from '../utils/classes.ts';
 
 function getFileName(query: IGetContractsQuery) {
   const fileParts = [];
@@ -51,6 +52,20 @@ class ContractService {
   addToken() {
     const token = localStorage.getItem('accessToken');
     this.httpService.defaults.headers.Authorization = `Bearer ${token}`;
+  }
+
+  async searchContracts(query: ISearchContractsQuery) {
+    if (!query.address) {
+      return [];
+    }
+
+    this.addToken();
+
+    const { data } = await this.httpService.get('/search', {
+      params: query,
+    });
+
+    return data as Contract[];
   }
 
   async getContracts(filters: IGetContractsQuery) {
