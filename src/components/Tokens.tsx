@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { useState } from 'react';
 import { ButtonClose } from '@components/ButtonClose.tsx';
 import { CopyToClipboard } from '@components/CopyToClipboard.tsx';
-import GatewayService from '../services/GatewayService';
+import GatewayService from '../services/ContractService.ts';
 import type { IToken } from '../utils/interfaces';
 import { parseNativeBalance, parseTokenBalanceUSD, truncateAddress } from '../utils/helpers';
 import { ModalStyle } from '../utils/constants.ts';

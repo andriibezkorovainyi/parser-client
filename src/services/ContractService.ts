@@ -1,8 +1,8 @@
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import type { IAddNoteBody, IGetContractsQuery } from '../utils/interfaces.ts';
-import { OperandType, OrderByType } from '../utils/enums.ts';
-import { HOST, PORT } from '../utils/constants.ts';
+import type { IAddNoteBody, IGetContractsQuery } from '../utils/interfaces';
+import { OperandType, OrderByType } from '../utils/enums';
+import { HOST, PORT } from '../utils/constants';
 
 function getFileName(query: IGetContractsQuery) {
   const fileParts = [];
@@ -36,12 +36,12 @@ function getFileName(query: IGetContractsQuery) {
   return `${fileParts.join('&')}.zip`;
 }
 
-class GatewayService {
+class ContractService {
   private readonly httpService: AxiosInstance;
 
   constructor() {
     this.httpService = axios.create({
-      baseURL: `${HOST}:${PORT}/api/gateway`,
+      baseURL: `${HOST}:${PORT}/api/contract`,
       timeout: 5_000,
     });
 
@@ -56,7 +56,7 @@ class GatewayService {
   async getContracts(filters: IGetContractsQuery) {
     this.addToken();
 
-    const { data } = await this.httpService.get('/contracts', {
+    const { data } = await this.httpService.get('', {
       params: filters,
     });
 
@@ -66,7 +66,7 @@ class GatewayService {
   async getTokens(contractId: number) {
     this.addToken();
 
-    const { data } = await this.httpService.get('/tokens', { params: { contractId } });
+    const { data } = await this.httpService.get('/token', { params: { contractId } });
 
     return data;
   }
@@ -99,7 +99,7 @@ class GatewayService {
   async addNote(body: IAddNoteBody) {
     this.addToken();
 
-    const { data } = await this.httpService.post('/addNote', body);
+    const { data } = await this.httpService.post('/note', body);
 
     return data;
   }
@@ -107,7 +107,7 @@ class GatewayService {
   async deleteNote(noteId: number) {
     this.addToken();
 
-    const { data } = await this.httpService.delete('/deleteNote', {
+    const { data } = await this.httpService.delete('/note', {
       params: { noteId },
     });
 
@@ -115,4 +115,4 @@ class GatewayService {
   }
 }
 
-export default new GatewayService();
+export default new ContractService();

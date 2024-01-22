@@ -5,7 +5,7 @@ import { DownloadArchive } from '@components/DownloadArchive.tsx';
 import User from '@components/User.tsx';
 import type { IGetContractsQuery } from '../utils/interfaces';
 import { NetworkType, OperandType, OrderByType } from '../utils/enums';
-import GatewayService from '../services/GatewayService.ts';
+import GatewayService from '../services/ContractService.ts';
 import type { Contract } from '../utils/classes.ts';
 
 function checkNumberFromInput(value: string) {
@@ -100,8 +100,11 @@ export default function () {
             <div className="box table-container">
               <h4>Network</h4>
               <select value={network} onChange={(e) => setNetwork(e.target.value as NetworkType)}>
-                <option value={NetworkType.ETH}>ETH</option>
-                <option value={NetworkType.MATIC}>MATIC</option>
+                {Object.values(NetworkType).map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

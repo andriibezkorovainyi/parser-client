@@ -8,13 +8,13 @@ class AuthService {
 
   constructor() {
     this.httpClient = axios.create({
-      baseURL: `${HOST}:${PORT}/api`,
+      baseURL: `${HOST}:${PORT}/api/auth`,
     });
   }
 
   async verifyToken(accessToken: string) {
     try {
-      const { data } = await this.httpClient.post('/auth/verify', {
+      const { data } = await this.httpClient.post('/verify', {
         accessToken,
       });
 
@@ -27,7 +27,7 @@ class AuthService {
 
   async signIn(username: string, password: string) {
     try {
-      const { data } = await this.httpClient.post('/auth/signIn', {
+      const { data } = await this.httpClient.post('/signIn', {
         password,
         username,
       });

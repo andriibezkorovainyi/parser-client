@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 import type { IGetContractsQuery } from '../utils/interfaces';
-import GatewayService from '../services/GatewayService';
+import GatewayService from '../services/ContractService.ts';
 
 interface Props {
   query: IGetContractsQuery;

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 import useAccessContext from '../hooks/useAccessContext.ts';
-import GatewayService from '../services/GatewayService.ts';
+import GatewayService from '../services/ContractService.ts';
 
 interface Props {
   contractId: number;

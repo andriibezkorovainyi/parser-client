@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ButtonClose } from '@components/ButtonClose.tsx';
 import type { INote } from '../utils/interfaces';
 import useAccessContext from '../hooks/useAccessContext';
-import GatewayService from '../services/GatewayService';
+import GatewayService from '../services/ContractService.ts';
 import { ModalStyle } from '../utils/constants.ts';
 
 interface Props {

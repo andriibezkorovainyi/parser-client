@@ -1,6 +1,9 @@
 export enum NetworkType {
   ETH = 'ETH',
-  MATIC = 'MATIC',
+  BSC = 'BSC',
+  POLYGON = 'POLYGON',
+  ARBITRUM = 'ARBITRUM',
+  OPTIMISM = 'OPTIMISM',
 }
 
 export enum OperandType {
