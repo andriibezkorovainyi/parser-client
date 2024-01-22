@@ -20,10 +20,10 @@ function SearchBar({ onSearch }: { onSearch: (query: ISearchContractsQuery) => v
   }, [debouncedValue]);
 
   return (
-    <div className="field search-bar">
+    <div className="field search-bar-container">
       <p className="control has-icons-left has-icons-right">
         <input
-          className="input"
+          className="input search-bar"
           type="text"
           placeholder="Address or name"
           value={inputValue}

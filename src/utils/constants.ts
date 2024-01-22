@@ -1,3 +1,5 @@
+import { NetworkType } from './enums.ts';
+
 export const ENVIRONMENT = import.meta.env.VITE_ENV || 'dev';
 
 // @ts-ignore
@@ -20,4 +22,12 @@ export const ModalStyle = {
   transform: 'translate(-50%, -50%)',
   width: '60%',
   zIndex: 1000,
+};
+
+export const chainsToNativeSymbols = {
+  [NetworkType.ETH]: 'ETH',
+  [NetworkType.ARBITRUM]: 'ETH',
+  [NetworkType.OPTIMISM]: 'ETH',
+  [NetworkType.BSC]: 'BNB',
+  [NetworkType.POLYGON]: 'MATIC',
 };

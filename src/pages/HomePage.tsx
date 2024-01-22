@@ -10,6 +10,7 @@ import { NetworkType, OperandType, OrderByType } from '../utils/enums';
 import GatewayService from '../services/ContractService.ts';
 import type { Contract } from '../utils/classes.ts';
 import ContractService from '../services/ContractService.ts';
+import { chainsToNativeSymbols } from '../utils/constants.ts';
 
 function checkNumberFromInput(value: string) {
   const parsed = parseFloat(value);
@@ -150,7 +151,8 @@ export default function () {
                 <option value={OperandType.LESS}>Less then</option>
               </select>
               <input
-                placeholder="e.g. ETH"
+                // style={{ outline: 'none' }}
+                placeholder={chainsToNativeSymbols[network]}
                 type="number"
                 value={balance}
                 onChange={(e) => setBalance(checkNumberFromInput(e.target.value))}

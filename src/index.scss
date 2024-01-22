@@ -47,16 +47,17 @@ button {
   background-color: rgb(255 255 255 / 87%);
   cursor: pointer;
   transition: border-color 0.25s;
-  border: 1px solid #242424;
+  //border: 1px solid #242424;
 
   &:hover {
     border-color: #646cff;
   }
 
-  &:focus,
-  &:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-  }
+  //&:focus,
+  //&:focus-visible,
+  //&:active {
+  //  outline: none;
+  //}
 }
 
 select {
@@ -92,10 +93,16 @@ input {
   background-color: rgb(185 185 180 / 57%);
   cursor: pointer;
   transition: border-color 0.25s;
+  outline: none;
 
   &:hover {
     border-color: #646cff;
   }
+
+    &:focus,
+    &:focus-visible {
+      border-color: #646cff;
+    }
 }
 
 //@media (prefers-color-scheme: light) {
