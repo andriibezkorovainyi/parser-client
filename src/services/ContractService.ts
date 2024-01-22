@@ -55,10 +55,6 @@ class ContractService {
   }
 
   async searchContracts(query: ISearchContractsQuery) {
-    if (!query.address) {
-      return [];
-    }
-
     this.addToken();
 
     const { data } = await this.httpService.get('/search', {

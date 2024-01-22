@@ -40,6 +40,11 @@ export default function () {
 
   const onSearch = useCallback(
     (query: ISearchContractsQuery) => {
+      if (query.address === '') {
+        setSearchedContracts([]);
+        return;
+      }
+
       setIsLoading(true);
 
       ContractService.searchContracts({ ...query, network })
@@ -70,6 +75,22 @@ export default function () {
     };
   }
 
+  function getContractsByFilters() {
+    const query = parseQuery();
+
+    setIsLoading(true);
+
+    GatewayService.getContracts(query)
+      .then(({ contracts: _c, totalPages: _tP }) => {
+        setContracts(_c);
+        setTotalPages(_tP);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setIsLoading(false));
+  }
+
   async function clearFilters() {
     return new Promise((resolve) => {
       setNetwork(NetworkType.ETH);
@@ -86,22 +107,6 @@ export default function () {
 
       resolve('OK');
     });
-  }
-
-  function getContractsByFilters() {
-    const query = parseQuery();
-
-    setIsLoading(true);
-
-    GatewayService.getContracts(query)
-      .then(({ contracts: _c, totalPages: _tP }) => {
-        setContracts(_c);
-        setTotalPages(_tP);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => setIsLoading(false));
   }
 
   function changePage(_page: number) {

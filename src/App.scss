@@ -113,10 +113,10 @@
 
 .contract-table {
   display: flex;
-  //justify-items: start;
+  flex-direction: column;
     align-items: start;
   width: 100%;
-  min-height: 50vh;
+  min-height: 2.155em * 25;
 }
 
 .search-bar {

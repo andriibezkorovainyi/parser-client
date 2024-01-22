@@ -16,7 +16,7 @@ export default function () {
 
     const interval = setInterval(() => {
       updatePointerHeights();
-    }, 10_000);
+    }, 15_000);
 
     return () => clearInterval(interval);
   }, []);

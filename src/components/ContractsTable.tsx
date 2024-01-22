@@ -13,36 +13,25 @@ interface Props {
 export const ContractTable: FC<Props> = ({ isLoading, contracts }) => {
   return (
     <div className="contract-table">
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <table className="table is-striped is-hoverable is-narrow is-fullwidth">
-          <thead>
-            <tr>
-              {columns.map((col) => (
-                <th key={col}>
-                  <span className="is-flex is-flex-wrap-nowrap">{col}</span>
-                </th>
-              ))}
-            </tr>
-          </thead>
-
+      <table className="table is-striped is-hoverable is-narrow is-fullwidth">
+        <thead>
+          <tr>
+            {columns.map((col) => (
+              <th key={col}>
+                <span className="is-flex is-flex-wrap-nowrap">{col}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        {isLoading ? null : (
           <tbody>
             {contracts?.map((contract) => {
               return <ContractInfo contract={contract} key={contract.id} />;
             })}
           </tbody>
-          {/* <tbody> */}
-          {/*  {contracts === null ? ( */}
-          {/*    <Loader /> */}
-          {/*  ) : ( */}
-          {/*    contracts.map((contract) => { */}
-          {/*      return <ContractInfo contract={contract} key={contract.id} />; */}
-          {/*    }) */}
-          {/*  )} */}
-          {/* </tbody> */}
-        </table>
-      )}
+        )}
+      </table>
+      {isLoading ? <Loader /> : null}
     </div>
   );
 };
