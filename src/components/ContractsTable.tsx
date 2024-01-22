@@ -7,12 +7,13 @@ const columns = new Contract().getColumns();
 
 interface Props {
   contracts: Contract[] | null;
+  isLoading: boolean;
 }
 
-export const ContractTable: FC<Props> = ({ contracts }) => {
+export const ContractTable: FC<Props> = ({ isLoading, contracts }) => {
   return (
     <div className="contract-table">
-      {contracts === null ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <table className="table is-striped is-hoverable is-narrow is-fullwidth">
@@ -27,7 +28,7 @@ export const ContractTable: FC<Props> = ({ contracts }) => {
           </thead>
 
           <tbody>
-            {contracts.map((contract) => {
+            {contracts?.map((contract) => {
               return <ContractInfo contract={contract} key={contract.id} />;
             })}
           </tbody>

@@ -228,7 +228,7 @@ export default function () {
       <SearchBar onSearch={onSearch} />
 
       <div>
-        <ContractTable contracts={isLoading ? null : contractsToShow} />
+        <ContractTable isLoading={isLoading} contracts={contractsToShow} />
       </div>
 
       <div>
