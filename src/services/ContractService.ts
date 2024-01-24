@@ -3,7 +3,7 @@ import axios from 'axios';
 import type { IAddNoteBody, IGetContractsQuery, ISearchContractsQuery } from '../utils/interfaces';
 import { OperandType, OrderByType } from '../utils/enums';
 import { HOST, PORT } from '../utils/constants';
-import type { Contract } from '../utils/classes.ts';
+import type { Contract } from '../utils/classes';
 
 function getFileName(query: IGetContractsQuery) {
   const fileParts = [];

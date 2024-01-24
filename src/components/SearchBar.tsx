@@ -29,7 +29,7 @@ function SearchBar({ onSearch }: { onSearch: (query: ISearchContractsQuery) => v
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <span className="icon is-small is-left is-absulute">
+        <span className="icon is-small is-left">
           <i className="fas fa-search" style={{ zIndex: 0 }} />
         </span>
       </p>
