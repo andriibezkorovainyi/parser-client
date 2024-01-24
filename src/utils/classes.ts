@@ -1,7 +1,5 @@
 import type { INetwork, INote, IToken } from './interfaces';
 
-export type ContractType = 'No contracts found' | Contract;
-
 export class Contract {
   id: number;
 

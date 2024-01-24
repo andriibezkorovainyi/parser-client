@@ -2,11 +2,11 @@ import type { FC } from 'react';
 import { Notes } from '@components/Notes.tsx';
 import { Tokens } from '@components/Tokens.tsx';
 import { CopyToClipboard } from '@components/CopyToClipboard.tsx';
-import type { ContractType } from '../utils/classes';
+import type { Contract } from '../utils/classes';
 import { parseNativeBalance, parseTokenBalanceUSD, truncateAddress } from '../utils/helpers';
 
 interface Props {
-  contract: ContractType;
+  contract: Contract;
 }
 
 export const ContractInfo: FC<Props> = ({ contract: { id, name, address, balance, tokenBalanceUSD, isVerified, notes } }) => {

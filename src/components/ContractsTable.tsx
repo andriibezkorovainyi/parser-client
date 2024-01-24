@@ -1,13 +1,12 @@
 import type { FC } from 'react';
 import { ContractInfo } from '@components/ContractInfo.tsx';
 import { Loader } from '@components/Loader';
-import type { ContractType } from '../utils/classes';
 import { Contract } from '../utils/classes';
 
 const columns = new Contract().getColumns();
 
 interface Props {
-  contracts: ContractType[] | null;
+  contracts: Contract[] | null | 'No contracts found';
   isLoading: boolean;
 }
 
@@ -25,7 +24,7 @@ export const ContractTable: FC<Props> = ({ isLoading, contracts }) => {
           </tr>
         </thead>
         {!isLoading ? (
-          contracts[0] === 'No contracts found' ? (
+          contracts === 'No contracts found' ? (
             <tbody>
               <tr>
                 <td colSpan={columns.length}>
@@ -42,7 +41,7 @@ export const ContractTable: FC<Props> = ({ isLoading, contracts }) => {
             </tbody>
           ) : (
             <tbody>
-              {contracts.map((contract) => (
+              {contracts?.map((contract) => (
                 <ContractInfo key={contract.address} contract={contract} />
               ))}
             </tbody>

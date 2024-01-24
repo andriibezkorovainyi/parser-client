@@ -8,9 +8,9 @@ import PointerHeight from '@components/PointerHeight.tsx';
 import type { IGetContractsQuery, ISearchContractsQuery } from '../utils/interfaces';
 import { NetworkType, OperandType, OrderByType } from '../utils/enums';
 import GatewayService from '../services/ContractService.ts';
-import type { ContractType } from '../utils/classes.ts';
 import ContractService from '../services/ContractService.ts';
 import { chainsToNativeSymbols } from '../utils/constants.ts';
+import type { Contract } from '../utils/classes.ts';
 
 function checkNumberFromInput(value: string) {
   const parsed = parseFloat(value);
@@ -19,7 +19,7 @@ function checkNumberFromInput(value: string) {
 }
 
 export default function () {
-  const [contracts, setContracts] = useState<ContractType[]>([]);
+  const [contracts, setContracts] = useState<Contract[]>([]);
   const [network, setNetwork] = useState<NetworkType>(NetworkType.ETH);
   const [orderBy, setOrderBy] = useState<OrderByType>(OrderByType.NONE);
   const [page, setPage] = useState<number>(1);
@@ -34,7 +34,7 @@ export default function () {
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [searchedContracts, setSearchedContracts] = useState<ContractType[]>([]);
+  const [searchedContracts, setSearchedContracts] = useState<Contract[] | 'No contracts found'>([]);
   // const [search, setSearch] = useState<string>('');
 
   const contractsToShow = searchedContracts.length > 0 ? searchedContracts : contracts;
@@ -50,10 +50,7 @@ export default function () {
 
       ContractService.searchContracts({ ...query, network })
         .then((c) => {
-          if (c.length === 0) {
-            c[0] = 'No contracts found';
-          }
-          setSearchedContracts(c);
+          setSearchedContracts(c.length > 0 ? c : 'No contracts found');
         })
         .catch((err) => {
           console.log(err);
