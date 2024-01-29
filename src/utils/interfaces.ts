@@ -69,4 +69,5 @@ export interface IAddNoteBody {
 export interface IPointerHeight {
   network: NetworkType;
   height: number;
+  percentage: number;
 }
