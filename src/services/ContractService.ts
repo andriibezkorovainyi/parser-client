@@ -90,6 +90,8 @@ class ContractService {
         'Accept-Ranges': 'bytes',
         'Content-Type': 'application/zip',
       },
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity,
       params: query,
       responseType: 'blob',
       timeout: Infinity,
