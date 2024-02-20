@@ -30,4 +30,5 @@ export const chainsToNativeSymbols = {
   [NetworkType.OPTIMISM]: 'ETH',
   [NetworkType.BSC]: 'BNB',
   [NetworkType.POLYGON]: 'MATIC',
+  [NetworkType.BASE]: 'ETH',
 };
