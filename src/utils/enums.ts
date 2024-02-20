@@ -4,6 +4,7 @@ export enum NetworkType {
   POLYGON = 'POLYGON',
   ARBITRUM = 'ARBITRUM',
   OPTIMISM = 'OPTIMISM',
+  BASE = 'BASE',
 }
 
 export enum OperandType {
