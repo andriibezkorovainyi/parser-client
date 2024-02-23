@@ -5,6 +5,7 @@ export enum NetworkType {
   ARBITRUM = 'ARBITRUM',
   OPTIMISM = 'OPTIMISM',
   BASE = 'BASE',
+  AVALANCHE = 'AVALANCHE',
 }
 
 export enum OperandType {

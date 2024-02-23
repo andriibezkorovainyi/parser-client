@@ -31,4 +31,5 @@ export const chainsToNativeSymbols = {
   [NetworkType.BSC]: 'BNB',
   [NetworkType.POLYGON]: 'MATIC',
   [NetworkType.BASE]: 'ETH',
+  [NetworkType.AVALANCHE]: 'AVAX',
 };
