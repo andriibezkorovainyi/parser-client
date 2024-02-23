@@ -43,7 +43,7 @@ class ContractService {
   constructor() {
     this.httpService = axios.create({
       baseURL: `${HOST}:${PORT}/api/contract`,
-      timeout: 5_000,
+      timeout: 10_000,
     });
 
     this.httpService.defaults.headers['Access-Control-Allow-Origin'] = '*';
