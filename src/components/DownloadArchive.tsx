@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const DownloadArchive: FC<Props> = ({ query }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [fromBlock, setFromBlock] = useState<number | ''>('');
   const [toBlock, setToBlock] = useState<number | ''>('');
 
@@ -52,23 +52,23 @@ export const DownloadArchive: FC<Props> = ({ query }) => {
         flexDirection: 'column',
       }}
     >
-      {isModalOpen && (
-        <div
-          style={{
-            backgroundColor: '#242424',
-            borderRadius: '10px',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
-            color: 'rgb(255 255 255 / 87%)',
-            left: '50%',
-            padding: '20px',
-            position: 'fixed',
-            top: '10%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          <p>Downloading archive...</p>
-        </div>
-      )}
+      {/* {isModalOpen && ( */}
+      {/*  <div */}
+      {/*    style={{ */}
+      {/*      backgroundColor: '#242424', */}
+      {/*      borderRadius: '10px', */}
+      {/*      boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', */}
+      {/*      color: 'rgb(255 255 255 / 87%)', */}
+      {/*      left: '50%', */}
+      {/*      padding: '20px', */}
+      {/*      position: 'fixed', */}
+      {/*      top: '10%', */}
+      {/*      transform: 'translate(-50%, -50%)', */}
+      {/*    }} */}
+      {/*  > */}
+      {/*    <p>Downloading archive...</p> */}
+      {/*  </div> */}
+      {/* )} */}
 
       <div className="block-ranges-input-container">
         <div style={{ position: 'relative', top: 0 }}>
@@ -93,7 +93,7 @@ export const DownloadArchive: FC<Props> = ({ query }) => {
           />
         </div>
 
-        <button style={{ margin: 'auto', marginBottom: 'auto' }} disabled={isModalOpen} onClick={downloadArchive}>
+        <button style={{ margin: 'auto', marginBottom: 'auto' }} onClick={downloadArchive}>
           Download Archive
         </button>
       </div>

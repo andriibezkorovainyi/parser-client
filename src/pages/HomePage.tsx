@@ -249,7 +249,7 @@ export default function () {
         </div>
       </div>
 
-      <SearchBar onSearch={onSearch} isDownloadPromptOpen={isDownloadPromptOpen} />
+      <SearchBar onSearch={onSearch} />
 
       <div>
         <ContractTable isLoading={isLoading} contracts={contractsToShow} />
