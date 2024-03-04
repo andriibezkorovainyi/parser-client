@@ -35,7 +35,6 @@ export default function () {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [searchedContracts, setSearchedContracts] = useState<Contract[] | 'No contracts found'>([]);
-  const [isDownloadPromptOpen, setIsDownloadPromptOpen] = useState<boolean>(false);
   // const [search, setSearch] = useState<string>('');
 
   const contractsToShow = searchedContracts.length > 0 ? searchedContracts : contracts;
@@ -60,14 +59,6 @@ export default function () {
     },
     [searchedContracts, network]
   );
-
-  useEffect(() => {
-    if (searchedContracts.length > 0) {
-      setIsDownloadPromptOpen(true);
-    } else {
-      setIsDownloadPromptOpen(false);
-    }
-  }, [searchedContracts]);
 
   function parseQuery(): IGetContractsQuery {
     return {
