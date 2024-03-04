@@ -57,7 +57,7 @@ export interface IGetContractsQuery {
 }
 
 export interface ISearchContractsQuery {
-  network?: NetworkType;
+  page?: number;
   address: string;
 }
 

@@ -7,10 +7,10 @@ import SearchBar from '@components/SearchBar.tsx';
 import PointerHeight from '@components/PointerHeight.tsx';
 import type { IGetContractsQuery, ISearchContractsQuery } from '../utils/interfaces';
 import { NetworkType, OperandType, OrderByType } from '../utils/enums';
-import GatewayService from '../services/ContractService.ts';
-import ContractService from '../services/ContractService.ts';
-import { chainsToNativeSymbols } from '../utils/constants.ts';
-import type { Contract } from '../utils/classes.ts';
+import GatewayService from '../services/ContractService';
+import ContractService from '../services/ContractService';
+import { chainsToNativeSymbols } from '../utils/constants';
+import type { Contract } from '../utils/classes';
 
 export function checkNumberFromInput(value: string) {
   const parsed = parseFloat(value);
@@ -24,6 +24,8 @@ export default function () {
   const [orderBy, setOrderBy] = useState<OrderByType>(OrderByType.NONE);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [searchedContractsPage, setSearchedContractsPage] = useState<number>(1);
+  const [searchedContractsTotalPages, setSearchedContractsTotalPages] = useState<number>(1);
   const [balance, setBalance] = useState<number | ''>('');
   const [tokenBalanceUSD, setTokenBalanceUSD] = useState<number | ''>('');
   const [balanceOperand, setBalanceOperand] = useState<OperandType>(OperandType.MORE);
@@ -35,7 +37,7 @@ export default function () {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [searchedContracts, setSearchedContracts] = useState<Contract[] | 'No contracts found'>([]);
-  // const [search, setSearch] = useState<string>('');
+  const [searchValue, setSearchValue] = useState<string>('');
 
   const contractsToShow = searchedContracts.length > 0 ? searchedContracts : contracts;
 
@@ -43,21 +45,25 @@ export default function () {
     (query: ISearchContractsQuery) => {
       if (query.address === '') {
         setSearchedContracts([]);
+        setSearchValue('');
         return;
       }
 
       setIsLoading(true);
 
-      ContractService.searchContracts({ ...query, network })
-        .then((c) => {
-          setSearchedContracts(c.length > 0 ? c : 'No contracts found');
+      ContractService.searchContracts(query)
+        .then((data) => {
+          setSearchedContracts(data.contracts.length > 0 ? data.contracts : 'No contracts found');
+          setSearchValue(query.address);
+          setSearchedContractsTotalPages(data.totalPages);
         })
         .catch((err) => {
           console.log(err);
+          setSearchValue('');
         })
         .finally(() => setIsLoading(false));
     },
-    [searchedContracts, network]
+    [searchedContracts]
   );
 
   function parseQuery(): IGetContractsQuery {
@@ -113,6 +119,14 @@ export default function () {
   function changePage(_page: number) {
     setPage(_page);
   }
+
+  function changeSearchPage(_page: number) {
+    setSearchedContractsPage(_page);
+  }
+
+  useEffect(() => {
+    onSearch({ address: searchValue, page: searchedContractsPage });
+  }, [searchedContractsPage]);
 
   useEffect(() => {
     getContractsByFilters();
@@ -246,9 +260,11 @@ export default function () {
         <ContractTable isLoading={isLoading} contracts={contractsToShow} />
       </div>
 
-      <div>
+      {searchValue !== '' ? (
+        <Pagination page={searchedContractsPage} totalPages={searchedContractsTotalPages} changePage={changeSearchPage} />
+      ) : (
         <Pagination page={page} totalPages={totalPages} changePage={changePage} />
-      </div>
+      )}
 
       <PointerHeight />
     </div>

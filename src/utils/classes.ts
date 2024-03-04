@@ -1,5 +1,6 @@
 import type { INetwork, INote, IToken } from './interfaces';
 
+// eslint-disable-next-line import/prefer-default-export
 export class Contract {
   id: number;
 
@@ -34,10 +35,12 @@ export class Contract {
     this.isVerified = false;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getColumns() {
     return [
       // 'Id',
       'Verified Code',
+      'Network',
       'Name',
       'Address',
       'Native balance',

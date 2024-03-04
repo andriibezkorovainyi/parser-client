@@ -61,7 +61,7 @@ class ContractService {
       params: query,
     });
 
-    return data as Contract[];
+    return data as { contracts: Contract[]; totalPages: number };
   }
 
   async getContracts(filters: IGetContractsQuery) {

@@ -9,12 +9,14 @@ interface Props {
   contract: Contract;
 }
 
-export const ContractInfo: FC<Props> = ({ contract: { id, name, address, balance, tokenBalanceUSD, isVerified, notes } }) => {
+export const ContractInfo: FC<Props> = ({ contract: { id, name, address, balance, tokenBalanceUSD, isVerified, notes, network } }) => {
   return (
     <tr>
       <td>
         <span>{isVerified ? '✅' : '❌'}</span>
       </td>
+
+      <td>{network.name}</td>
 
       <td>{name || 'Unknown'}</td>
 
