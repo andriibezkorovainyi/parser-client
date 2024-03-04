@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 import type { IGetContractsQuery } from '../utils/interfaces';
-import GatewayService from '../services/ContractService.ts';
+import { HOST, PORT } from '../utils/constants.ts';
+import { checkNumberFromInput } from '../pages/HomePage.tsx';
 
 interface Props {
   query: IGetContractsQuery;
@@ -9,18 +10,38 @@ interface Props {
 
 export const DownloadArchive: FC<Props> = ({ query }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fromBlock, setFromBlock] = useState<number | ''>('');
+  const [toBlock, setToBlock] = useState<number | ''>('');
 
   async function downloadArchive() {
-    setIsModalOpen(true);
+    const baseUrl = `${HOST}:${PORT}/api/contract/downloadArchive`;
+    const _query = { ...query, fromBlock, toBlock };
 
-    GatewayService.downloadArchive(query)
-      .then(() => {
-        setIsModalOpen(false);
+    const queryString = Object.entries(_query)
+      .map(([key, value]) => {
+        if (value === '') {
+          return '';
+        }
+
+        return `${key}=${value}`;
       })
-      .catch((err) => {
-        console.error(err);
-        setIsModalOpen(false);
-      });
+      .join('&');
+
+    const url = `${baseUrl}?${queryString}`;
+
+    // Открываем новую вкладку с URL, который инициирует загрузку
+    window.open(url, '_blank');
+
+    // setIsModalOpen(true);
+
+    // GatewayService.downloadArchive(query)
+    //   .then(() => {
+    //     setIsModalOpen(false);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //     setIsModalOpen(false);
+    //   });
   }
 
   return (
@@ -49,9 +70,33 @@ export const DownloadArchive: FC<Props> = ({ query }) => {
         </div>
       )}
 
-      <button style={{ marginTop: 40 }} disabled={isModalOpen} onClick={downloadArchive}>
-        Download Archive
-      </button>
+      <div className="block-ranges-input-container">
+        <div style={{ position: 'relative', top: 0 }}>
+          From
+          <input
+            // style={{ outline: 'none' }}
+            placeholder="block number"
+            type="number"
+            value={fromBlock}
+            onChange={(e) => setFromBlock(checkNumberFromInput(e.target.value))}
+          />
+        </div>
+
+        <div>
+          To
+          <input
+            // style={{ outline: 'none' }}
+            placeholder="block number"
+            type="number"
+            value={toBlock}
+            onChange={(e) => setToBlock(checkNumberFromInput(e.target.value))}
+          />
+        </div>
+
+        <button style={{ margin: 'auto', marginBottom: 'auto' }} disabled={isModalOpen} onClick={downloadArchive}>
+          Download Archive
+        </button>
+      </div>
     </div>
   );
 };

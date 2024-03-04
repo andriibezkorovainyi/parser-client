@@ -12,7 +12,7 @@ import ContractService from '../services/ContractService.ts';
 import { chainsToNativeSymbols } from '../utils/constants.ts';
 import type { Contract } from '../utils/classes.ts';
 
-function checkNumberFromInput(value: string) {
+export function checkNumberFromInput(value: string) {
   const parsed = parseFloat(value);
 
   return isNaN(parsed) ? '' : parsed;
@@ -35,6 +35,7 @@ export default function () {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [searchedContracts, setSearchedContracts] = useState<Contract[] | 'No contracts found'>([]);
+  const [isDownloadPromptOpen, setIsDownloadPromptOpen] = useState<boolean>(false);
   // const [search, setSearch] = useState<string>('');
 
   const contractsToShow = searchedContracts.length > 0 ? searchedContracts : contracts;
@@ -59,6 +60,14 @@ export default function () {
     },
     [searchedContracts, network]
   );
+
+  useEffect(() => {
+    if (searchedContracts.length > 0) {
+      setIsDownloadPromptOpen(true);
+    } else {
+      setIsDownloadPromptOpen(false);
+    }
+  }, [searchedContracts]);
 
   function parseQuery(): IGetContractsQuery {
     return {
@@ -194,45 +203,53 @@ export default function () {
           </div>
         </div>
 
-        <div>
-          <span>Order By</span>
-          <select value={orderBy} onChange={(e) => setOrderBy(e.target.value as OrderByType)}>
-            <option value={OrderByType.NONE}>None</option>
-            <option value={OrderByType.BALANCE}>Balance</option>
-            <option value={OrderByType.TOKEN_BALANCE_USD}>Token Balance USD</option>
-          </select>
-        </div>
+        <div className="main-actions-container">
+          <div>
+            <div>
+              <span>Order By</span>
+              <select value={orderBy} onChange={(e) => setOrderBy(e.target.value as OrderByType)}>
+                <option value={OrderByType.NONE}>None</option>
+                <option value={OrderByType.BALANCE}>Balance</option>
+                <option value={OrderByType.TOKEN_BALANCE_USD}>Token Balance USD</option>
+              </select>
+            </div>
 
-        <div className="mt-3">
-          <input
-            style={{
-              marginRight: 3,
-            }}
-            type="checkbox"
-            checked={verifiedOnly}
-            onChange={(e) => setVerifiedOnly(e.target.checked)}
-          />
-          <label>Verified Only</label>
+            <div className="mt-3">
+              <input
+                style={{
+                  marginRight: 3,
+                }}
+                type="checkbox"
+                checked={verifiedOnly}
+                onChange={(e) => setVerifiedOnly(e.target.checked)}
+              />
+              <label>Verified Only</label>
+            </div>
+
+            <div className="filters-actions">
+              <button type="button" onClick={getContractsByFilters}>
+                Filter
+              </button>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  await clearFilters();
+                  getContractsByFilters();
+                }}
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <DownloadArchive query={parseQuery()} />
+          </div>
         </div>
       </div>
 
-      <div className="filters-actions">
-        <button type="button" onClick={getContractsByFilters}>
-          Filter
-        </button>
-
-        <button
-          type="button"
-          onClick={async () => {
-            await clearFilters();
-            getContractsByFilters();
-          }}
-        >
-          Reset
-        </button>
-      </div>
-
-      <SearchBar onSearch={onSearch} />
+      <SearchBar onSearch={onSearch} isDownloadPromptOpen={isDownloadPromptOpen} />
 
       <div>
         <ContractTable isLoading={isLoading} contracts={contractsToShow} />
@@ -240,10 +257,6 @@ export default function () {
 
       <div>
         <Pagination page={page} totalPages={totalPages} changePage={changePage} />
-      </div>
-
-      <div>
-        <DownloadArchive query={parseQuery()} />
       </div>
 
       <PointerHeight />

@@ -52,6 +52,8 @@ export interface IGetContractsQuery {
   tokenUSDAmount: number;
   tokenUSDAmountOperand: OperandType;
   orderBy: OrderByType;
+  fromBlock?: number;
+  toBlock?: number;
 }
 
 export interface ISearchContractsQuery {
