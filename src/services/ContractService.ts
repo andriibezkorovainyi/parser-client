@@ -40,10 +40,12 @@ function getFileName(query: IGetContractsQuery) {
 class ContractService {
   private readonly httpService: AxiosInstance;
 
+  private readonly timeout = 40_000;
+
   constructor() {
     this.httpService = axios.create({
       baseURL: `${HOST}:${PORT}/api/contract`,
-      timeout: 10_000,
+      timeout: this.timeout,
     });
 
     this.httpService.defaults.headers['Access-Control-Allow-Origin'] = '*';
@@ -59,6 +61,7 @@ class ContractService {
 
     const { data } = await this.httpService.get('/search', {
       params: query,
+      timeout: this.timeout,
     });
 
     return data as { contracts: Contract[]; totalPages: number };
@@ -69,6 +72,7 @@ class ContractService {
 
     const { data } = await this.httpService.get('', {
       params: filters,
+      timeout: this.timeout,
     });
 
     return data;
