@@ -54,6 +54,7 @@ export interface IGetContractsQuery {
   orderBy: OrderByType;
   fromBlock?: number;
   toBlock?: number;
+  search?: string;
 }
 
 export interface ISearchContractsQuery {

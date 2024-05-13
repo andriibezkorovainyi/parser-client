@@ -1,15 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ContractTable } from '@components/ContractsTable.tsx';
 import { Pagination } from '@components/Pagination.tsx';
-import { DownloadArchive } from '@components/DownloadArchive.tsx';
 import User from '@components/User.tsx';
 import SearchBar from '@components/SearchBar.tsx';
 import PointerHeight from '@components/PointerHeight.tsx';
-import type { IGetContractsQuery, ISearchContractsQuery } from '../utils/interfaces';
+import type { IGetContractsQuery } from '../utils/interfaces';
 import { NetworkType, OperandType, OrderByType } from '../utils/enums';
 import GatewayService from '../services/ContractService';
-import ContractService from '../services/ContractService';
-import { chainsToNativeSymbols } from '../utils/constants';
+import { chainsToNativeSymbols, CONTRACTS_PER_PAGE, HOST, PORT } from '../utils/constants';
 import type { Contract } from '../utils/classes';
 
 export function checkNumberFromInput(value: string) {
@@ -20,12 +18,13 @@ export function checkNumberFromInput(value: string) {
 
 export default function () {
   const [contracts, setContracts] = useState<Contract[]>([]);
+  const [contractsTotalCount, setContractsTotalCount] = useState<number>(0);
   const [network, setNetwork] = useState<NetworkType>(NetworkType.ETH);
   const [orderBy, setOrderBy] = useState<OrderByType>(OrderByType.NONE);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [searchedContractsPage, setSearchedContractsPage] = useState<number>(1);
-  const [searchedContractsTotalPages, setSearchedContractsTotalPages] = useState<number>(1);
+  // const [searchedContractsPage, setSearchedContractsPage] = useState<number>(1);
+  // const [searchedContractsTotalPages, setSearchedContractsTotalPages] = useState<number>(1);
   const [balance, setBalance] = useState<number | ''>('');
   const [tokenBalanceUSD, setTokenBalanceUSD] = useState<number | ''>('');
   const [balanceOperand, setBalanceOperand] = useState<OperandType>(OperandType.MORE);
@@ -35,44 +34,51 @@ export default function () {
   const [tokenUSDAmountOperand, setTokenUSDAmountOperand] = useState<OperandType>(OperandType.MORE);
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [prevQueryStr, setPrevQueryStr] = useState<string>('');
+  const [fromBlock, setFromBlock] = useState<number | ''>('');
+  const [toBlock, setToBlock] = useState<number | ''>('');
 
-  const [searchedContracts, setSearchedContracts] = useState<Contract[] | 'No contracts found'>([]);
+  // const [searchedContracts, setSearchedContracts] = useState<Contract[] | 'No contracts found'>([]);
   const [searchValue, setSearchValue] = useState<string>('');
 
-  const contractsToShow = searchedContracts.length > 0 ? searchedContracts : contracts;
+  // const contractsToShow = searchedContracts.length > 0 ? searchedContracts : contracts;
 
-  const onSearch = useCallback(
-    (query: ISearchContractsQuery) => {
-      if (query.address === '') {
-        setSearchedContracts([]);
-        setSearchValue('');
-        return;
-      }
-
-      setIsLoading(true);
-
-      ContractService.searchContracts(query)
-        .then((data) => {
-          setSearchedContracts(data.contracts.length > 0 ? data.contracts : 'No contracts found');
-          setSearchValue(query.address);
-          setSearchedContractsTotalPages(data.totalPages);
-        })
-        .catch((err) => {
-          console.log(err);
-          setSearchValue('');
-        })
-        .finally(() => setIsLoading(false));
-    },
-    [searchedContracts]
-  );
+  // const onSearch
+  // const onSearch = useCallback(
+  //   (query: ISearchContractsQuery) => {
+  //     if (query.address === '') {
+  //       setSearchedContracts([]);
+  //       setSearchValue('');
+  //       return;
+  //     }
+  //
+  //     setIsLoading(true);
+  //
+  //     ContractService.searchContracts(query)
+  //       .then((data) => {
+  //         setSearchedContracts(data.contracts.length > 0 ? data.contracts : 'No contracts found');
+  //         setSearchValue(query.address);
+  //         setSearchedContractsTotalPages(data.totalPages);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         setSearchValue('');
+  //       })
+  //       .finally(() => setIsLoading(false));
+  //   },
+  //   [searchedContracts]
+  // );
 
   function parseQuery(): IGetContractsQuery {
     return {
       balance: Number(balance),
       balanceOperand,
+      fromBlock: Number(fromBlock) || undefined,
       network,
       orderBy,
       page,
+      search: searchValue,
+      toBlock: Number(toBlock) || undefined,
       tokenAddress,
       tokenBalanceUSD: Number(tokenBalanceUSD),
       tokenBalanceUSDOperand,
@@ -84,13 +90,21 @@ export default function () {
 
   function getContractsByFilters() {
     const query = parseQuery();
+    const queryStr = JSON.stringify({ ...query, page: null });
+
+    if (queryStr !== prevQueryStr) {
+      query.page = 1;
+      setPage(1);
+      setPrevQueryStr(queryStr);
+    }
 
     setIsLoading(true);
 
     GatewayService.getContracts(query)
-      .then(({ contracts: _c, totalPages: _tP }) => {
+      .then(({ contracts: _c, totalCount }) => {
         setContracts(_c);
-        setTotalPages(_tP);
+        setContractsTotalCount(totalCount);
+        setTotalPages(Math.ceil(totalCount / CONTRACTS_PER_PAGE));
       })
       .catch((err) => {
         console.log(err);
@@ -98,40 +112,61 @@ export default function () {
       .finally(() => setIsLoading(false));
   }
 
-  async function clearFilters() {
-    return new Promise((resolve) => {
-      setNetwork(NetworkType.ETH);
-      setOrderBy(OrderByType.NONE);
-      setPage(1);
-      setBalance(0);
-      setTokenBalanceUSD(0);
-      setBalanceOperand(OperandType.MORE);
-      setTokenBalanceUSDOperand(OperandType.MORE);
-      setTokenAddress('');
-      setTokenUSDAmount(0);
-      setTokenUSDAmountOperand(OperandType.MORE);
-      setVerifiedOnly(false);
+  function clearFilters() {
+    // return new Promise((resolve) => {
+    setNetwork(NetworkType.ETH);
+    setOrderBy(OrderByType.NONE);
+    setPage(1);
+    setBalance(0);
+    setTokenBalanceUSD(0);
+    setBalanceOperand(OperandType.MORE);
+    setTokenBalanceUSDOperand(OperandType.MORE);
+    setTokenAddress('');
+    setTokenUSDAmount(0);
+    setTokenUSDAmountOperand(OperandType.MORE);
+    setVerifiedOnly(false);
+    setSearchValue('');
 
-      resolve('OK');
-    });
+    // resolve('OK');
+    // });
   }
 
   function changePage(_page: number) {
     setPage(_page);
-  }
-
-  function changeSearchPage(_page: number) {
-    setSearchedContractsPage(_page);
-  }
-
-  useEffect(() => {
-    onSearch({ address: searchValue, page: searchedContractsPage });
-  }, [searchedContractsPage]);
-
-  useEffect(() => {
     getContractsByFilters();
-    // }
-  }, [page]);
+  }
+
+  // function changeSearchPage(_page: number) {
+  //   setSearchedContractsPage(_page);
+  // }
+
+  // useEffect(() => {
+  //   onSearch({ address: searchValue, page: searchedContractsPage });
+  // }, [searchedContractsPage]);
+
+  // useEffect(() => {
+  //   getContractsByFilters();
+  //   // }
+  // }, [page]);
+
+  const downloadArchive = async () => {
+    const baseUrl = `${HOST}:${PORT}/api/contract/downloadArchive`;
+    const query = parseQuery();
+
+    const queryString = Object.entries(query)
+      .reduce((acc, [key, value]) => {
+        if (value === '' || value === undefined) {
+          return acc;
+        }
+
+        return [...acc, `${key}=${value}`];
+      }, [] as string[])
+      .join('&');
+
+    const url = `${baseUrl}?${queryString}`;
+
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="container">
@@ -208,22 +243,15 @@ export default function () {
           </div>
         </div>
 
-        <div className="main-actions-container">
-          <div>
-            <div>
-              <span>Order By</span>
-              <select value={orderBy} onChange={(e) => setOrderBy(e.target.value as OrderByType)}>
-                <option value={OrderByType.NONE}>None</option>
-                <option value={OrderByType.BALANCE}>Balance</option>
-                <option value={OrderByType.TOKEN_BALANCE_USD}>Token Balance USD</option>
-              </select>
-            </div>
+        <SearchBar onSearch={setSearchValue} searchValue={searchValue} />
 
-            <div className="mt-3">
+        <div className="main-actions-container">
+          <div className="child-actions-container">
+            <div style={{ maxWidth: 'max-content' }}>
               <input
-                style={{
-                  marginRight: 3,
-                }}
+                // style={{
+                //   marginRight: 3,
+                // }}
                 type="checkbox"
                 checked={verifiedOnly}
                 onChange={(e) => setVerifiedOnly(e.target.checked)}
@@ -231,40 +259,84 @@ export default function () {
               <label>Verified Only</label>
             </div>
 
-            <div className="filters-actions">
-              <button type="button" onClick={getContractsByFilters}>
-                Filter
-              </button>
-
-              <button
-                type="button"
-                onClick={async () => {
-                  await clearFilters();
-                  getContractsByFilters();
-                }}
-              >
-                Reset
-              </button>
+            <div style={{ maxWidth: 'max-content' }}>
+              <span>Order By</span>
+              <select value={orderBy} onChange={(e) => setOrderBy(e.target.value as OrderByType)}>
+                <option value={OrderByType.NONE}>None</option>
+                <option value={OrderByType.BALANCE}>Balance</option>
+                <option value={OrderByType.TOKEN_BALANCE_USD}>Token Balance USD</option>
+              </select>
             </div>
           </div>
 
-          <div>
-            <DownloadArchive query={parseQuery()} />
+          <div className="child-actions-container">
+            <div style={{ maxWidth: 'max-content' }}>
+              From
+              <input
+                style={{ marginLeft: '10px' }}
+                placeholder="block number"
+                type="number"
+                value={fromBlock}
+                onChange={(e) => setFromBlock(checkNumberFromInput(e.target.value))}
+              />
+            </div>
+
+            <div style={{ maxWidth: 'max-content' }}>
+              To
+              <input
+                style={{ marginLeft: '30px' }}
+                placeholder="block number"
+                type="number"
+                value={toBlock}
+                onChange={(e) => setToBlock(checkNumberFromInput(e.target.value))}
+              />
+            </div>
           </div>
+        </div>
+
+        <div className="filters-actions">
+          <button type="button" onClick={getContractsByFilters}>
+            Filter
+          </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              await clearFilters();
+              getContractsByFilters();
+            }}
+          >
+            Reset
+          </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              downloadArchive();
+            }}
+          >
+            Download by Filters
+          </button>
         </div>
       </div>
 
-      <SearchBar onSearch={onSearch} />
-
       <div>
-        <ContractTable isLoading={isLoading} contracts={contractsToShow} />
+        <h2 style={{ fontWeight: 'bold', marginBottom: '5px', marginLeft: '5px', textAlign: 'start' }}>
+          {' '}
+          Total count: {contractsTotalCount}{' '}
+        </h2>
+
+        <ContractTable isLoading={isLoading} contracts={contracts} />
       </div>
 
-      {searchValue !== '' ? (
-        <Pagination page={searchedContractsPage} totalPages={searchedContractsTotalPages} changePage={changeSearchPage} />
-      ) : (
-        <Pagination page={page} totalPages={totalPages} changePage={changePage} />
-      )}
+      {/* {searchValue !== '' ? ( */}
+      {/*  <Pagination page={searchedContractsPage} totalPages={searchedContractsTotalPages} changePage={changeSearchPage} /> */}
+      {/* ) : ( */}
+      <Pagination page={page} totalPages={totalPages} changePage={changePage} />
+      {/* )} */}
+      {/* <div> */}
+      {/*  <DownloadArchive query={parseQuery()} /> */}
+      {/* </div> */}
 
       <PointerHeight />
     </div>

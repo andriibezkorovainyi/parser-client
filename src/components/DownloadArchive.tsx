@@ -29,19 +29,7 @@ export const DownloadArchive: FC<Props> = ({ query }) => {
 
     const url = `${baseUrl}?${queryString}`;
 
-    // Открываем новую вкладку с URL, который инициирует загрузку
     window.open(url, '_blank');
-
-    // setIsModalOpen(true);
-
-    // GatewayService.downloadArchive(query)
-    //   .then(() => {
-    //     setIsModalOpen(false);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     setIsModalOpen(false);
-    //   });
   }
 
   return (

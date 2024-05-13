@@ -2,6 +2,8 @@ import { NetworkType } from './enums.ts';
 
 export const ENVIRONMENT = import.meta.env.VITE_ENV || 'dev';
 
+export const CONTRACTS_PER_PAGE = 25;
+
 // @ts-ignore
 export const HOST = ENVIRONMENT === 'dev' ? 'http://localhost' : import.meta.env.VITE_API_HOST;
 export const PORT = import.meta.env.VITE_API_PORT;
