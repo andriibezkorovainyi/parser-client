@@ -36,7 +36,7 @@ const SearchBar: FC<Props> = ({ onSearch, searchValue }) => {
             onChange={(e) => onSearch(e.target.value)}
           />
           <span className="icon is-small is-left">
-            <i className="fas fa-search" style={{ zIndex: 0 }} />
+            <i className="fas fa-search" />
           </span>
         </p>
       </div>

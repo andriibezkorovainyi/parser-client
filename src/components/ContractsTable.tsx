@@ -13,7 +13,7 @@ interface Props {
 export const ContractTable: FC<Props> = ({ isLoading, contracts }) => {
   return (
     <div className="contract-table">
-      <table className="table is-striped is-hoverable is-narrow is-fullwidth">
+      <table className="table is-narrow is-fullwidth">
         <thead>
           <tr>
             {columns.map((col) => (

@@ -256,7 +256,7 @@ export default function () {
                 checked={verifiedOnly}
                 onChange={(e) => setVerifiedOnly(e.target.checked)}
               />
-              <label>Verified Only</label>
+              <label style={{ marginLeft: '5px' }}>Verified Only</label>
             </div>
 
             <div style={{ maxWidth: 'max-content' }}>

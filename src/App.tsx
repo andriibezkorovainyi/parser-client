@@ -1,4 +1,4 @@
-import './App.scss';
+import './styles/App.scss';
 import HomePage from './pages/HomePage';
 import AuthorizationPage from './pages/AuthorizationPage';
 import useAccessContext from './hooks/useAccessContext';
