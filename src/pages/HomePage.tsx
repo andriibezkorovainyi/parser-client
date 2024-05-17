@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ContractTable } from '@components/ContractsTable.tsx';
 import { Pagination } from '@components/Pagination.tsx';
 import User from '@components/User.tsx';
@@ -133,7 +133,6 @@ export default function () {
 
   function changePage(_page: number) {
     setPage(_page);
-    getContractsByFilters();
   }
 
   // function changeSearchPage(_page: number) {
@@ -144,10 +143,9 @@ export default function () {
   //   onSearch({ address: searchValue, page: searchedContractsPage });
   // }, [searchedContractsPage]);
 
-  // useEffect(() => {
-  //   getContractsByFilters();
-  //   // }
-  // }, [page]);
+  useEffect(() => {
+    getContractsByFilters();
+  }, [page]);
 
   const downloadArchive = async () => {
     const baseUrl = `${HOST}:${PORT}/api/contract/downloadArchive`;
